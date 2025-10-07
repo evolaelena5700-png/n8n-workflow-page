@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Avvia Workflow n8n</title>
+  <style>
+    /* 🌈 --- STILE GENERALE --- */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #ff6f61; /* rosso pastello n8n */
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* 🔘 --- BOTTONE --- */
+    button {
+      background-color: #fff;
+      color: #ff6f61;
+      border: none;
+      border-radius: 50px;
+      padding: 18px 40px;
+      font-size: 22px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    /* 📨 --- MESSAGGIO --- */
+    #message {
+      position: absolute;
+      bottom: 40px;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <button id="startButton">Avvia Workflow</button>
+  <p id="message"></p>
+
+  <script>
+    const WEBHOOK_URL = "https://lovely-loops-own.loca.lt/webhook-test/contact-form";
+
+    document.getElementById('startButton').addEventListener('click', async () => {
+      const messageEl = document.getElementById('message');
+      messageEl.textContent = "Esecuzione in corso...";
+      try {
+        const res = await fetch(WEBHOOK_URL, { method: 'POST' });
+        if (!res.ok) throw new Error("Errore " + res.status);
+        const data = await res.json().catch(() => null);
+        messageEl.textContent =
+          (data && data.message) ? data.message : "Workflow avviato con successo! ✅";
+      } catch (err) {
+        messageEl.textContent = "Errore: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
